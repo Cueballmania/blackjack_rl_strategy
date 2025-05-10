@@ -1,0 +1,9 @@
+Starting Blackjack Strategy Generator web app on http://127.0.0.1:5008/
+ * Serving Flask app 'web.app'
+ * Debug mode: off
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5008
+[33mPress CTRL+C to quit[0m
+127.0.0.1 - - [09/May/2025 10:25:55] "POST /api/train HTTP/1.1" 200 -
+127.0.0.1 - - [09/May/2025 10:27:02] "GET /api/training_status HTTP/1.1" 200 -
+127.0.0.1 - - [09/May/2025 10:27:10] "GET /api/training_results HTTP/1.1" 200 -
