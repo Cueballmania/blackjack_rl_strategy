@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, send_from_directory
+from flask import Flask, render_template, request, jsonify, send_from_directory, session
 import os
 import json
 import pandas as pd
@@ -22,6 +22,7 @@ app = Flask(__name__)
 # Global variables to store the model and results
 model = None
 training_thread = None
+game_env = None # Global game environment for Blackjack
 training_progress = {
     'status': 'idle',
     'progress': 0,
@@ -349,3 +350,53 @@ def strategy_table():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
+
+@app.route('/blackjack')
+def blackjack_game():
+    return render_template('blackjack_game.html')
+
+@app.route('/blackjack/new_game', methods=['POST'])
+def blackjack_new_game():
+    global game_env
+    # For now, we use a default config. Later, this could come from request or a saved user profile.
+    game_env = BlackjackEnv() 
+    state = game_env.reset()
+    # Convert state to be JSON serializable if it contains custom objects like Card
+    # For BlackjackEnv, the state is already a dict of serializable types (or should be)
+    return jsonify(state)
+
+@app.route('/blackjack/action', methods=['POST'])
+def blackjack_action():
+    global game_env
+    if game_env is None:
+        return jsonify({'error': 'Game not started. Please start a new game.'}), 400
+
+    action_data = request.json
+    action = action_data.get('action')
+
+    if action is None:
+        return jsonify({'error': 'No action provided.'}), 400
+
+    try:
+        # Assuming action is an integer as expected by BlackjackEnv.step()
+        action = int(action) 
+    except ValueError:
+        return jsonify({'error': 'Invalid action format. Action must be an integer.'}), 400
+
+    new_state, reward, done, info = game_env.step(action)
+    
+    # Convert new_state to be JSON serializable
+    # Similar to the state from reset(), it should be serializable
+
+    if done:
+        # Optionally, reset or clear game_env if the game is over
+        # For now, we'll let the client decide to start a new game
+        pass
+
+    return jsonify({
+        'new_state': new_state,
+        'reward': reward,
+        'done': done,
+        'info': info
+    })

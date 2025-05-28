@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blackjack Game</title>
+    <!-- Corrected to use Flask's url_for for static files -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blackjack_game.css') }}">
+</head>
+<body>
+    <div id="game-container">
+        <h1>Blackjack</h1>
+
+        <div id="dealer-area">
+            <h2>Dealer <span id="dealer-score-display">(Score: <span id="dealer-score">0</span>)</span></h2>
+            <div id="dealer-hand" class="hand-cards">
+                <!-- Dealer card images will be dynamically added here by JS -->
+            </div>
+        </div>
+
+        <div id="player-area">
+            <h2>Player <span id="player-score-display">(Overall Score/Status)</span></h2> <!-- General player score/status -->
+            <div id="player-hand">
+                <!-- Player .hand-container divs will be dynamically added here by JS -->
+            </div>
+        </div>
+
+        <div id="action-buttons">
+            <button id="new-game-button">New Game</button>
+            <button id="hit-button">Hit</button>
+            <button id="stand-button">Stand</button>
+            <button id="double-button">Double</button>
+            <button id="split-button">Split</button>
+        </div>
+
+        <div id="game-messages">
+            <!-- Game messages will be shown here by JS -->
+        </div>
+    </div>
+    <!-- Corrected to use Flask's url_for for static files -->
+    <script src="{{ url_for('static', filename='js/blackjack_game.js') }}"></script>
+</body>
+</html>

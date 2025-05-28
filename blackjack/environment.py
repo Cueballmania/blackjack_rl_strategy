@@ -395,18 +395,40 @@ class BlackjackEnv:
         current_hand = self.player_hands[self.current_hand_index] if self.current_hand_index < len(self.player_hands) else None
         
         # For the state representation, only show the dealer's up card unless game is done
-        dealer_visible_cards = [self.dealer_hand.cards[0].value] if self.dealer_hand and self.dealer_hand.cards else []
-        # If all player hands are done, show the complete dealer hand
-        if self.current_hand_index >= len(self.player_hands) or all(hand.stood or hand.busted for hand in self.player_hands):
-            dealer_visible_cards = [card.value for card in self.dealer_hand.cards] if self.dealer_hand else []
+        # Dealer's up card is the first card (index 0 in standard blackjack)
+        dealer_up_card_obj = self.dealer_hand.cards[0] if self.dealer_hand and self.dealer_hand.cards else None
+        dealer_up_card_info = (dealer_up_card_obj.suit, dealer_up_card_obj.rank) if dealer_up_card_obj else None
+
+        dealer_visible_cards_info = []
+        # If all player hands are done, or game is over, show the complete dealer hand with suits and ranks
+        # The check for all hands being stood or busted implies game is effectively over for player interaction.
+        # The actual reveal of dealer's hole card happens in resolve_dealer_and_get_rewards.
+        # For state representation, we can show full dealer hand if it's "dealer's turn" or game ended.
+        
+        # Simplified: if current_hand_index >= len(self.player_hands), it's dealer's turn or game over.
+        # More robust: check a game_over flag if available, or if all player hands are resolved.
+        # For now, let's assume if player is done, dealer cards are revealed for state.
+        # The actual game logic ensures hole card is not used in counting until revealed.
+        
+        is_player_phase_done = self.current_hand_index >= len(self.player_hands) or \
+                               all(hand.stood or hand.busted or (hasattr(hand, 'surrendered') and hand.surrendered) 
+                                   for hand in self.player_hands)
+
+        if is_player_phase_done:
+            # Show all dealer cards (suit, rank)
+            dealer_visible_cards_info = [(card.suit, card.rank) for card in self.dealer_hand.cards] if self.dealer_hand else []
+        elif dealer_up_card_obj:
+            # Show only dealer's up card (suit, rank) and a placeholder for the hole card
+            dealer_visible_cards_info = [dealer_up_card_info, ('hidden', 'hidden')] # Placeholder for hole card
         
         return {
-            'dealer_up_card': dealer_up_card,
-            'dealer_hand': dealer_visible_cards,
+            'dealer_up_card': dealer_up_card_info, # Tuple (suit, rank) or None
+            'dealer_hand': dealer_visible_cards_info, # List of (suit, rank) tuples, or includes hidden placeholder
             'player_hands': [
                 {
-                    'cards': [card.value for card in hand.cards],
-                    'card_ranks': [card.rank for card in hand.cards],
+                    # 'cards_values': [card.value for card in hand.cards], # Retain for compatibility or remove
+                    'cards': [(card.suit, card.rank) for card in hand.cards], # List of (suit, rank) tuples
+                    'card_ranks': [card.rank for card in hand.cards], # Keep for convenience in JS if needed
                     'value': hand.get_value(),
                     'is_split': hand.is_split,
                     'doubled': hand.doubled,
