@@ -1,0 +1,147 @@
+/* Overall Layout */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#game-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 80%;
+    max-width: 900px;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #555;
+}
+
+/* Hand Areas */
+#dealer-area, 
+#player-area {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #e9f5e9; /* Light green background */
+}
+
+/* These are the main containers for dealer/player cards or hand-containers */
+#dealer-hand, 
+#player-hand {
+    min-height: 120px; 
+}
+
+/* Individual Hand Styling (for player hands, especially if splits occur) */
+.hand-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.hand-container.active-hand {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0,123,255,0.5);
+}
+
+.hand-info {
+    font-weight: bold;
+    margin-bottom: 5px; /* For text like "Player Hand 1 (Score: 18)" */
+}
+
+/* Card Images & Layout */
+.hand-cards { /* Direct container for card images */
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 5px; 
+    min-height: 115px; /* Ensure some height even if empty */
+}
+
+.card-image {
+    width: 75px;
+    height: auto; /* Maintain aspect ratio */
+    margin: 2px 5px 2px 0;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    background-color: white; /* In case SVGs have transparent parts */
+}
+
+/* Action Buttons */
+#action-buttons {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#action-buttons button {
+    padding: 10px 15px;
+    margin: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    border: 1px solid #007bff;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+#action-buttons button:hover {
+    background-color: #0056b3;
+}
+
+#action-buttons button:disabled {
+    background-color: #ccc;
+    border-color: #bbb;
+    cursor: not-allowed;
+}
+
+/* Scores and Messages */
+#dealer-score-display, 
+#player-score-display { 
+    font-size: 1.1em; 
+    font-weight: bold; 
+    margin-bottom: 10px;
+}
+
+#game-messages {
+    text-align: center;
+    font-size: 1.2em; 
+    font-weight: bold;
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.message-win {
+    color: #28a745; 
+    background-color: #d4edda; 
+    border: 1px solid #c3e6cb; 
+}
+
+.message-lose {
+    color: #dc3545; 
+    background-color: #f8d7da; 
+    border: 1px solid #f5c6cb; 
+}
+
+.message-push {
+    color: #ffc107; 
+    background-color: #fff3cd; 
+    border: 1px solid #ffeeba; 
+}
+
+.message-info {
+    color: #17a2b8; 
+    background-color: #d1ecf1; 
+    border: 1px solid #bee5eb; 
+}
